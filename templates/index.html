@@ -3,300 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protein Sequence Inference</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-bg: #000000;
-            --secondary-bg: #0a0a0a;
-            --highlight: #ffffff;
-            --accent: #888888;
-            --text-main: #ffffff;
-            --card-shadow: 0 0 20px rgba(255, 255, 255, 0.03);
-            --sparkle: #ffffff;
-        }
-
-        body {
-            font-family: 'SF Pro Display', '-apple-system', 'Helvetica Neue', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--primary-bg);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-image: radial-gradient(#222222 1px, transparent 1px);
-            background-size: 30px 30px;
-        }
-
-        header {
-            background: var(--primary-bg);
-            padding: 20px 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #333333;
-        }
-
-        .header-logo {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--highlight);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        main {
-            flex-grow: 1;
-            padding: 40px 10%;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            align-items: center;
-        }
-
-        .title-card {
-            text-align: center;
-            background: var(--secondary-bg);
-            padding: 40px;
-            border: 1px solid #333333;
-            width: 100%;
-            max-width: 800px;
-            box-sizing: border-box;
-        }
-
-        .main-title {
-            font-size: 2.5rem;
-            margin: 0 0 10px;
-            color: var(--highlight);
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            font-weight: 300;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .subtitle {
-            font-size: 1rem;
-            color: var(--accent);
-            letter-spacing: 1px;
-            margin: 0 auto;
-        }
-
-        .input-card {
-            background-color: var(--secondary-bg);
-            padding: 30px;
-            box-shadow: var(--card-shadow);
-            border: 1px solid #222222;
-            width: 100%;
-            max-width: 800px;
-            box-sizing: border-box;
-        }
-
-        textarea {
-            width: 100%;
-            height: 120px;
-            background: transparent;
-            border: 1px dashed #555555;
-            color: var(--highlight);
-            padding: 20px;
-            font-family: monospace;
-            font-size: 1.1rem;
-            box-sizing: border-box;
-            resize: vertical;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-        }
-
-        textarea:focus {
-            outline: none;
-            border-color: var(--highlight);
-            background: #0a0a0a;
-        }
-
-        .analyze-btn {
-            background: var(--highlight);
-            color: var(--primary-bg);
-            border: none;
-            padding: 15px 30px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .analyze-btn:hover {
-            background: #cccccc;
-            transform: scale(0.99);
-        }
-
-        .diagnostic-card {
-            background-color: var(--secondary-bg);
-            padding: 30px;
-            border: 1px solid #222222;
-            width: 100%;
-            max-width: 800px;
-            box-sizing: border-box;
-            margin-top: 20px;
-        }
-
-        .result-header {
-            border-bottom: 1px solid #333333;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            color: var(--accent);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .alignment {
-            font-family: monospace;
-            font-size: 1.2rem;
-            letter-spacing: 4px;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding: 20px;
-            border: 1px solid #333333;
-            background: #050505;
-        }
-
-        .alignment .seq { color: var(--accent); margin-bottom: 10px;}
-        .alignment .struct { color: var(--highlight); font-weight: bold; }
-
-        .legend {
-            font-family: monospace;
-            font-size: 0.9rem;
-            color: var(--accent);
-            margin-top: 20px;
-            text-transform: uppercase;
-        }
-
-        .error-msg {
-            color: var(--highlight);
-            background: #222222;
-            padding: 15px;
-            text-align: center;
-            font-family: monospace;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 20px;
-        }
-
-        .sparkle-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        footer {
-            background: var(--primary-bg);
-            padding: 20px 5%;
-            text-align: center;
-            color: #555555;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            border-top: 1px solid #222222;
-            margin-top: auto;
-        }
-    </style>
+    <title>Protein Sequence Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="sparkle-particles"></div>
-    
-    <header>
-        <div class="header-logo">
-            <i class="fas fa-dna"></i> Biosequence Neural Net
-        </div>
-    </header>
-
-    <main>
-        <div class="title-card">
-            <h1 class="main-title">
-                <i class="fas fa-network-wired"></i>
-                Fold Inference Engine
-            </h1>
-            <p class="subtitle">Deploying Bi-LSTM sequence analysis on 1D amino acid arrays.</p>
-        </div>
-
-        <div class="input-card">
-            <p style="text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-size: 0.9rem; margin-top: 0;">Input Data String</p>
-            <form action="/predict" method="post">
-                <textarea name="sequence" placeholder="> INPUT_AMINO_ACID_SEQUENCE (MAX 50)&#10;> MVLSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHFDLS" required></textarea>
-                <button type="submit" class="analyze-btn">Execute Folding Sequence <i class="fas fa-play"></i></button>
-            </form>
-
-            {% if error %}
-                <div class="error-msg">{{ error }}</div>
-            {% endif %}
-        </div>
-
-        {% if original_seq %}
-            <div class="diagnostic-card">
-                <div class="result-header">
-                    Inference Output [TENSOR_SHAPE: {{ seq_len }}]
-                </div>
-                
-                <div class="alignment">
-                    <div class="seq">{{ original_seq }}</div>
-                    <div class="struct">{{ predicted_struct }}</div>
-                </div>
-
-                <div class="legend">
-                    > STATUS: OK<br>
-                    > MAPPING: [H] = ALPHA_HELIX | [E] = BETA_SHEET | [C] = RANDOM_COIL
-                </div>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased flex items-center justify-center min-h-screen">
+    <div class="max-w-lg w-full bg-white p-8 border border-gray-200 shadow-sm rounded-none">
+        <h1 class="text-3xl font-bold mb-2 tracking-tight text-black">Protein Analysis</h1>
+        <p class="text-gray-500 mb-8 text-sm">Upload sequence data for cloud-based inference.</p>
+        
+        <form id="uploadForm" class="space-y-6">
+            <div class="border-2 border-dashed border-gray-300 p-6 flex flex-col items-center justify-center hover:border-black transition-colors bg-gray-50">
+                <input type="file" id="fileInput" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-black file:text-white hover:file:bg-gray-800 transition-colors" required>
             </div>
-        {% endif %}
-    </main>
+            <button type="submit" id="submitBtn" class="w-full bg-black text-white font-semibold py-3 px-4 hover:bg-gray-800 transition-colors">
+                Analyze Sequence
+            </button>
+        </form>
 
-    <footer>
-        SYS_STATUS: ONLINE &bull; PORT: 5001 &bull; MODEL: BI_LSTM_V1
-    </footer>
+        <div id="result" class="hidden mt-6 p-4 bg-gray-100 border-l-4 border-black text-sm"></div>
+    </div>
 
     <script>
-        const particleContainer = document.querySelector('.sparkle-particles');
-        for (let i = 0; i < 40; i++) {
-            const particle = document.createElement('div');
-            particle.style.cssText = `
-                position: absolute;
-                width: 1px;
-                height: 1px;
-                background-color: var(--sparkle);
-                top: ${Math.random() * 100}%;
-                left: ${Math.random() * 100}%;
-                opacity: ${Math.random() * 0.5};
-                animation: pulseParticle ${3 + Math.random() * 4}s infinite;
-            `;
-            particleContainer.appendChild(particle);
-        }
-        
-        const styleSheet = document.styleSheets[0];
-        styleSheet.insertRule(`
-            @keyframes pulseParticle {
-                0%, 100% { opacity: 0; }
-                50% { opacity: 0.5; }
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            const file = document.getElementById('fileInput').files[0];
+            
+            // Trigger asynchronous loading state
+            btn.textContent = 'Processing...';
+            btn.disabled = true;
+            btn.classList.add('opacity-50');
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/upload', { method: 'POST', body: formData });
+                const data = await response.text();
+                resultDiv.innerHTML = `<span class="font-semibold text-black">Result:</span> ${data}`;
+                resultDiv.classList.remove('hidden');
+            } catch (error) {
+                resultDiv.innerHTML = '<span class="text-red-600 font-semibold">Error processing request.</span>';
+                resultDiv.classList.remove('hidden');
+            } finally {
+                // Restore button state
+                btn.textContent = 'Analyze Sequence';
+                btn.disabled = false;
+                btn.classList.remove('opacity-50');
             }
-        `, styleSheet.cssRules.length);
+        });
     </script>
 </body>
 </html>
