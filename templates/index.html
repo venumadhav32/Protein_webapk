@@ -3,54 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Protein Sequence Analysis</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Protein Analysis Cloud Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0f0f11;
+            --card-bg: #18181b;
+            --border-color: #27272a;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --accent: #ffffff;
+            --accent-hover: #e4e4e7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 520px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .upload-dropzone {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            background: rgba(255, 255, 255, 0.01);
+            transition: all 0.3s ease;
+            margin-bottom: 24px;
+        }
+
+        .upload-dropzone:hover {
+            border-color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-label-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .file-name-display {
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: var(--accent);
+            color: var(--bg-color);
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-submit:active {
+            transform: scale(0.98);
+        }
+
+        .result-box {
+            margin-top: 28px;
+            background: #09090b;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: none;
+            white-space: pre-wrap;
+            word-break: break-all;
+            border-left: 3px solid var(--accent);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--bg-color);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans antialiased flex items-center justify-center min-h-screen">
-    <div class="max-w-lg w-full bg-white p-8 border border-gray-200 shadow-sm rounded-none">
-        <h1 class="text-3xl font-bold mb-2 tracking-tight text-black">Protein Analysis</h1>
-        <p class="text-gray-500 mb-8 text-sm">Upload sequence data for cloud-based inference.</p>
-        
-        <form id="uploadForm" class="space-y-6">
-            <div class="border-2 border-dashed border-gray-300 p-6 flex flex-col items-center justify-center hover:border-black transition-colors bg-gray-50">
-                <input type="file" id="fileInput" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-black file:text-white hover:file:bg-gray-800 transition-colors" required>
+<body>
+
+    <div class="dashboard-container">
+        <div class="header">
+            <h1>Protein Analysis</h1>
+            <p>Cloud-native sequential deep learning inference & S3 archiving.</p>
+        </div>
+
+        <form id="uploadForm">
+            <div class="upload-dropzone">
+                <input type="file" id="fileInput" name="file" class="file-input" required>
+                <div class="file-label-content">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-secondary);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                    <span style="font-size: 14px; font-weight: 500;">Click to upload or drag & drop</span>
+                    <span style="font-size: 12px; color: var(--text-secondary);">Supports text-based sequence files (.txt, .csv)</span>
+                    <div id="fileNameDisplay" class="file-name-display"></div>
+                </div>
             </div>
-            <button type="submit" id="submitBtn" class="w-full bg-black text-white font-semibold py-3 px-4 hover:bg-gray-800 transition-colors">
-                Analyze Sequence
-            </button>
+
+            <button type="submit" id="submitBtn" class="btn-submit">Analyze Sequence</button>
         </form>
 
-        <div id="result" class="hidden mt-6 p-4 bg-gray-100 border-l-4 border-black text-sm"></div>
+        <div id="resultBox" class="result-box"></div>
     </div>
 
     <script>
-        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('submitBtn');
-            const resultDiv = document.getElementById('result');
-            const file = document.getElementById('fileInput').files[0];
-            
-            // Trigger asynchronous loading state
-            btn.textContent = 'Processing...';
-            btn.disabled = true;
-            btn.classList.add('opacity-50');
+        const fileInput = document.getElementById('fileInput');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const uploadForm = document.getElementById('uploadForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const resultBox = document.getElementById('resultBox');
 
-            const formData = new FormData();
-            formData.append('file', file);
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                fileNameDisplay.textContent = `Selected: ${e.target.files[0].name}`;
+            }
+        });
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(uploadForm);
+            
+            // UI Loading State
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<span class="spinner"></span>Processing Inference...`;
+            resultBox.style.display = 'none';
 
             try {
-                const response = await fetch('/api/upload', { method: 'POST', body: formData });
-                const data = await response.text();
-                resultDiv.innerHTML = `<span class="font-semibold text-black">Result:</span> ${data}`;
-                resultDiv.classList.remove('hidden');
-            } catch (error) {
-                resultDiv.innerHTML = '<span class="text-red-600 font-semibold">Error processing request.</span>';
-                resultDiv.classList.remove('hidden');
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const textResult = await response.text();
+                
+                resultBox.style.display = 'block';
+                resultBox.style.color = '#f4f4f5';
+                resultBox.textContent = textResult;
+            } catch (err) {
+                resultBox.style.display = 'block';
+                resultBox.style.color = '#ef4444';
+                resultBox.textContent = `Error: Cloud pipeline connection failed.`;
             } finally {
-                // Restore button state
-                btn.textContent = 'Analyze Sequence';
-                btn.disabled = false;
-                btn.classList.remove('opacity-50');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Analyze Sequence';
             }
         });
     </script>
